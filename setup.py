@@ -8,11 +8,11 @@ from setuptools import setup
 from tornado_restless import __version__
 
 setup(
-    name='Tornado-Restless27',
+    name='Tornado-Restless',
     version=__version__,
-    author='James Westover',
-    author_email='westover@pas.rochester.edu',
-    url='https://github.com/westover/tornado-restless',
+    author='Martin Martimeo',
+    author_email='martin@martimeo.de',
+    url='https://github.com/tornado-utils/tornado-restless',
     packages=['tornado_restless'],
     license='GNU AGPLv3+ or BSD-3-clause',
     platforms='any',
@@ -31,6 +31,8 @@ setup(
         'Programming Language :: Python',
         'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.3',
         'Topic :: Software Development :: Libraries :: Python Modules'
     ],
 )
