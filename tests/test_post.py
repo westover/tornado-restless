@@ -3,6 +3,7 @@
 """
 
 """
+from __future__ import unicode_literals
 import json
 from tests.base import TestBase
 

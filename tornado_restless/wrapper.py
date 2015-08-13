@@ -3,9 +3,13 @@
 """
 
 """
+from __future__ import unicode_literals
 from collections import namedtuple
 import inspect
 import logging
+
+from builtins import super
+
 
 from sqlalchemy import inspect as sqinspect
 from sqlalchemy.exc import NoInspectionAvailable
@@ -256,7 +260,7 @@ class SessionedModelWrapper(ModelWrapper):
     """
 
     def __init__(self, model, session):
-        super(SessionedModelWrapper, self).__init__(model)
+        super().__init__(model)
         self.session = session
 
     @staticmethod

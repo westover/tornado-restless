@@ -18,6 +18,8 @@ except ImportError:
 import sys
 import itertools
 
+from builtins import super
+
 from sqlalchemy import inspect as sqinspect
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm.exc import NoResultFound, UnmappedInstanceError, MultipleResultsFound
@@ -90,7 +92,7 @@ class BaseHandler(RequestHandler):
         if allow_method_override and 'X-HTTP-Method-Override' in self.request.headers:
             self.request.method = self.request.headers['X-HTTP-Method-Override']
 
-        super(BaseHandler, self).initialize()
+        super().initialize()
 
         self.model = SessionedModelWrapper(model, manager.session_maker())
         self.pk_length = len(sqinspect(model).primary_key)
@@ -214,9 +216,9 @@ class BaseHandler(RequestHandler):
                 self.finish(dict(type=exc_type.__module__ + "." + exc_type.__name__,
                                  message="%s" % exc_value, **exc_value.__dict__))
             else:
-                super(BaseHandler,self).write_error(status_code, **kwargs)
+                super().write_error(status_code, **kwargs)
         else:
-            super(BaseHandler, self).write_error(status_code, **kwargs)
+            super().write_error(status_code, **kwargs)
 
     def patch(self, instance_id=None):
         """
@@ -612,7 +614,7 @@ class BaseHandler(RequestHandler):
             :param kwargs: Additional keyword arguments @see tornado.web.RequestHandler.get_argument
         """
         try:
-            return super(BaseHandler, self).get_argument(name, *args, **kwargs)
+            return super().get_argument(name, *args, **kwargs)
         except HTTPError:
             if name == "q" and self.request.method in ['PUT', 'PATCH']:
                 return self.get_body_argument(name, *args, **kwargs)

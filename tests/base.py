@@ -3,6 +3,7 @@
 """
     
 """
+from __future__ import unicode_literals
 from datetime import datetime
 from json import loads
 import logging
@@ -24,10 +25,6 @@ import tornado.ioloop
 from flask.ext.restless import APIManager as FlaskRestlessManager
 
 from tornado_restless import ApiManager as TornadoRestlessManager
-
-
-__author__ = 'Martin Martimeo <martin@martimeo.de>'
-__date__ = '21.08.13'
 
 
 class TestBase(object):

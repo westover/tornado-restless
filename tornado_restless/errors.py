@@ -3,8 +3,9 @@
 """
 
 """
-
+from __future__ import unicode_literals
 from tornado.web import HTTPError
+from builtins import super
 
 
 class IllegalArgumentError(ValueError, HTTPError):
@@ -34,7 +35,7 @@ class DictConvertionError(HTTPError):
     """
 
     def __init__(self, instance_type, log_message=None, status_code=400, *args, **kwargs):
-        super(DictConvertionError, self).__init__(status_code, log_message, *args, **kwargs)
+        super().__init__(status_code, log_message, *args, **kwargs)
         self.instance_type = instance_type
 
 
@@ -50,5 +51,5 @@ except ImportError:
         """
 
         def __init__(self, method=None, log_message=None, status_code=405, *args, **kwargs):
-            super(MethodNotAllowedError, self).__init__(status_code, log_message, *args, **kwargs)
+            super().__init__(status_code, log_message, *args, **kwargs)
             self.method = method
