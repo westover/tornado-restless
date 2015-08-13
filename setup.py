@@ -11,7 +11,7 @@ setup(
     name='Tornado-Restless27',
     version=__version__,
     author='James Westover',
-    author_email='martin@martimeo.de',
+    author_email='westover@pas.rochester.edu',
     url='https://github.com/westover/tornado-restless',
     packages=['tornado_restless'],
     license='GNU AGPLv3+ or BSD-3-clause',
