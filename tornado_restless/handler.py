@@ -11,7 +11,10 @@ from json import loads
 import logging
 from math import ceil
 from traceback import print_exception
-from urllib.parse import parse_qs
+try:
+    from urllib.parse import parse_qs
+except ImportError:
+    from future.moves.urllib.parse import parse_qs
 import sys
 import itertools
 
@@ -24,10 +27,6 @@ from tornado.web import RequestHandler, HTTPError
 from .convert import to_dict, to_filter
 from .errors import IllegalArgumentError, MethodNotAllowedError, ProcessingException
 from .wrapper import SessionedModelWrapper
-
-
-__author__ = 'Martin Martimeo <martin@martimeo.de>'
-__date__ = '26.04.13 - 22:09'
 
 
 class BaseHandler(RequestHandler):
@@ -53,18 +52,18 @@ class BaseHandler(RequestHandler):
     def initialize(self,
                    model,
                    manager,
-                   methods: set,
-                   preprocessor: dict,
-                   postprocessor: dict,
-                   allow_patch_many: bool,
-                   allow_method_override: bool,
+                   methods,
+                   preprocessor,
+                   postprocessor,
+                   allow_patch_many,
+                   allow_method_override,
                    validation_exceptions,
-                   exclude_queries: bool,
-                   exclude_hybrids: bool,
-                   include_columns: list,
-                   exclude_columns: list,
-                   results_per_page: int,
-                   max_results_per_page: int):
+                   exclude_queries,
+                   exclude_hybrids,
+                   include_columns,
+                   exclude_columns,
+                   results_per_page,
+                   max_results_per_page):
         """
 
         Init of the handler, derives arguments from api create_api_blueprint
@@ -122,7 +121,7 @@ class BaseHandler(RequestHandler):
         """
         self._call_postprocessor()
 
-    def parse_columns(self, strings: list) -> dict:
+    def parse_columns(self, strings):
         """
             Parse a list of column names (name1, name2, relation.name1, ...)
 
@@ -166,7 +165,7 @@ class BaseHandler(RequestHandler):
 
         return to_filter(self.model.model, argument_filters, argument_orders)
 
-    def write_error(self, status_code: int, **kwargs):
+    def write_error(self, status_code, **kwargs):
         """
             Encodes any exceptions thrown to json
 
@@ -215,11 +214,11 @@ class BaseHandler(RequestHandler):
                 self.finish(dict(type=exc_type.__module__ + "." + exc_type.__name__,
                                  message="%s" % exc_value, **exc_value.__dict__))
             else:
-                super().write_error(status_code, **kwargs)
+                super(BaseHandler,self).write_error(status_code, **kwargs)
         else:
-            super().write_error(status_code, **kwargs)
+            super(BaseHandler, self).write_error(status_code, **kwargs)
 
-    def patch(self, instance_id: str=None):
+    def patch(self, instance_id=None):
         """
             PATCH (update instance) request
 
@@ -246,7 +245,7 @@ class BaseHandler(RequestHandler):
         self._call_postprocessor(result=result)
         self.finish(result)
 
-    def patch_many(self) -> dict:
+    def patch_many(self):
         """
             Patch many instances
 
@@ -289,7 +288,7 @@ class BaseHandler(RequestHandler):
         self.set_status(201, "Patched")
         return {'num_modified': num}
 
-    def patch_single(self, instance_id: list) -> dict:
+    def patch_single(self, instance_id):
         """
             Patch one instance
 
@@ -338,7 +337,7 @@ class BaseHandler(RequestHandler):
             # Commit
             self.model.session.commit()
 
-    def delete(self, instance_id: str=None):
+    def delete(self, instance_id=None):
         """
             DELETE (delete instance) request
 
@@ -366,7 +365,7 @@ class BaseHandler(RequestHandler):
         self._call_postprocessor(result=result)
         self.finish(result)
 
-    def delete_many(self) -> dict:
+    def delete_many(self):
         """
             Remove many instances
 
@@ -404,7 +403,7 @@ class BaseHandler(RequestHandler):
         self.set_status(200, "Removed")
         return {'num_removed': num}
 
-    def delete_single(self, instance_id: list) -> dict:
+    def delete_single(self, instance_id):
         """
             Get one instance
 
@@ -428,7 +427,7 @@ class BaseHandler(RequestHandler):
         self.set_status(204, "Instance removed")
         return {}
 
-    def put(self, instance_id: str=None):
+    def put(self, instance_id=None):
         """
             PUT (update instance) request
 
@@ -460,7 +459,7 @@ class BaseHandler(RequestHandler):
     put_many = patch_many
     put_single = patch_single
 
-    def post(self, instance_id: str=None):
+    def post(self, instance_id=None):
         """
             POST (new input) request
 
@@ -515,7 +514,7 @@ class BaseHandler(RequestHandler):
             self.model.session.commit()
 
     @memoized_instancemethod
-    def get_content_encoding(self) -> str:
+    def get_content_encoding(self):
         """
         Get the encoding the client sends us for encoding request.body correctly
 
@@ -529,7 +528,7 @@ class BaseHandler(RequestHandler):
             return 'latin1'
 
     @memoized_instancemethod
-    def get_body_arguments(self) -> dict:
+    def get_body_arguments(self):
         """
             Get arguments encode as json body
 
@@ -556,7 +555,7 @@ class BaseHandler(RequestHandler):
         else:
             raise HTTPError(415, content_type=content_type)
 
-    def get_body_argument(self, name: str, default=RequestHandler._ARG_DEFAULT):
+    def get_body_argument(self, name, default=RequestHandler._ARG_DEFAULT):
         """
         Get an argument named key from json encoded body
 
@@ -575,7 +574,7 @@ class BaseHandler(RequestHandler):
             return default
 
     @property
-    def search_params(self) -> dict:
+    def search_params(self):
         """
             The 'q' Dictionary
         """
@@ -585,7 +584,7 @@ class BaseHandler(RequestHandler):
             self._search_params = loads(self.get_argument("q", default="{}"))
             return self._search_params
 
-    def get_query_argument(self, name: str, default=RequestHandler._ARG_DEFAULT):
+    def get_query_argument(self, name, default=RequestHandler._ARG_DEFAULT):
         """
         Get an argument named key from json encoded body
 
@@ -604,7 +603,7 @@ class BaseHandler(RequestHandler):
         else:
             return default
 
-    def get_argument(self, name: str, *args, **kwargs):
+    def get_argument(self, name, *args, **kwargs):
         """
             On PUT/PATCH many request parameter may be located in body instead of query
 
@@ -613,7 +612,7 @@ class BaseHandler(RequestHandler):
             :param kwargs: Additional keyword arguments @see tornado.web.RequestHandler.get_argument
         """
         try:
-            return super().get_argument(name, *args, **kwargs)
+            return super(BaseHandler, self).get_argument(name, *args, **kwargs)
         except HTTPError:
             if name == "q" and self.request.method in ['PUT', 'PATCH']:
                 return self.get_body_argument(name, *args, **kwargs)
@@ -669,7 +668,7 @@ class BaseHandler(RequestHandler):
 
         return values
 
-    def get(self, instance_id: str=None):
+    def get(self, instance_id=None):
         """
             GET request
 
@@ -693,7 +692,7 @@ class BaseHandler(RequestHandler):
         self._call_postprocessor(result=result)
         self.finish(result)
 
-    def get_single(self, instance_id: list) -> dict:
+    def get_single(self, instance_id):
         """
             Get one instance
 
@@ -710,7 +709,7 @@ class BaseHandler(RequestHandler):
         # To Dict
         return self.to_dict(instance)
 
-    def get_many(self) -> dict:
+    def get_many(self):
         """
             Get all instances
 

@@ -3,18 +3,16 @@
 """
 
 """
-__author__ = 'Martin Martimeo <martin@martimeo.de>'
-__date__ = '29.04.13 - 15:34'
-
+from __future__ import unicode_literals, print_function
 from setuptools import setup
 from tornado_restless import __version__
 
 setup(
-    name='Tornado-Restless',
+    name='Tornado-Restless27',
     version=__version__,
-    author='Martin Martimeo',
+    author='James Westover',
     author_email='martin@martimeo.de',
-    url='https://github.com/tornado-utils/tornado-restless',
+    url='https://github.com/westover/tornado-restless',
     packages=['tornado_restless'],
     license='GNU AGPLv3+ or BSD-3-clause',
     platforms='any',
@@ -31,8 +29,8 @@ setup(
         'License :: OSI Approved :: BSD License',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
-        'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.3',
+        'Programming Language :: Python :: 2',
+        'Programming Language :: Python :: 2.7',
         'Topic :: Software Development :: Libraries :: Python Modules'
     ],
 )

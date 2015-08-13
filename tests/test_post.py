@@ -6,9 +6,6 @@
 import json
 from tests.base import TestBase
 
-__author__ = 'Martin Martimeo <martin@martimeo.de>'
-__date__ = '04.09.13 - 16:14'
-
 
 class TestGet(TestBase):
     """

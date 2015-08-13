@@ -7,9 +7,6 @@ import json
 import logging
 from .base import TestBase
 
-__author__ = 'Martin Martimeo <martin@martimeo.de>'
-__date__ = '21.08.13'
-
 
 class TestGet(TestBase):
     """

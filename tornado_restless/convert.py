@@ -3,6 +3,7 @@
 """
 
 """
+from __future__ import unicode_literals, print_function, absolute_import
 from datetime import datetime, date, time
 from decimal import Decimal
 import collections
@@ -15,9 +16,6 @@ from sqlalchemy.orm.query import Query
 from .errors import IllegalArgumentError, DictConvertionError
 from .wrapper import ModelWrapper
 
-
-__author__ = 'Martin Martimeo <martin@martimeo.de>'
-__date__ = '23.05.13 - 17:41'
 
 __datetypes__ = (datetime, time, date)
 __basetypes__ = (str, int, bool, float)
