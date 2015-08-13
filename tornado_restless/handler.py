@@ -245,7 +245,8 @@ class BaseHandler(RequestHandler):
             result = self.patch_single(self.parse_pk(instance_id))
 
         self._call_postprocessor(result=result)
-        self.finish(result)
+        if not self._finished:
+            self.finish(result)
 
     def patch_many(self):
         """
@@ -365,7 +366,8 @@ class BaseHandler(RequestHandler):
             result = self.delete_single(self.parse_pk(instance_id))
 
         self._call_postprocessor(result=result)
-        self.finish(result)
+        if not self._finished:
+            self.finish(result)
 
     def delete_many(self):
         """
@@ -456,7 +458,8 @@ class BaseHandler(RequestHandler):
             result = self.put_single(self.parse_pk(instance_id))
 
         self._call_postprocessor(result=result)
-        self.finish(result)
+        if not self._finished:
+            self.finish(result)
 
     put_many = patch_many
     put_single = patch_single
@@ -692,7 +695,8 @@ class BaseHandler(RequestHandler):
             result = self.get_single(self.parse_pk(instance_id))
 
         self._call_postprocessor(result=result)
-        self.finish(result)
+        if not self._finished:
+            self.finish(result)
 
     def get_single(self, instance_id):
         """
